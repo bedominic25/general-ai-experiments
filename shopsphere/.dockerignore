@@ -1,0 +1,13 @@
+# Build context for both images is this workspace root; keep it small and keep
+# local installs, build output, SQLite files and secrets out of the images.
+**/node_modules
+**/dist
+**/*.db
+**/*.db-journal
+**/*.db-wal
+**/*.db-shm
+**/playwright-report
+**/test-results
+**/.terraform
+.env
+.env.local
