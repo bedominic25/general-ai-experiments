@@ -1,0 +1,7 @@
+security_id,name,currency,asset_class
+AAPL,Apple Inc,USD,EQUITY
+MSFT,Microsoft Corp,USD,EQUITY
+NESN,Nestle SA,CHF,EQUITY
+SAP,SAP SE,EUR,EQUITY
+VOD,Vodafone Group PLC,GBP,EQUITY
+UST10Y,US Treasury 10Y Note,USD,FIXED_INCOME

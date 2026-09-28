@@ -1,0 +1,15 @@
+[project]
+name = "etl-data-quality"
+version = "0.1.0"
+description = "Pytest framework for ETL testing and PostgreSQL data-quality validation"
+requires-python = ">=3.9"
+dependencies = ["psycopg[binary]>=3.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "unit: fast tests with no database",
+    "integration: needs PostgreSQL (DATABASE_URL)",
+]
