@@ -17,6 +17,7 @@
     "test:unit": "npm run test:unit -w apps/api",
     "test:e2e": "npm run test -w tests",
     "test:e2e:mobile": "npm run test:mobile -w tests",
+    "report": "npm run report -w tests",
     "seed": "npm run seed -w apps/api"
   },
   "engines": {
