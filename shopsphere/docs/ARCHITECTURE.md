@@ -66,7 +66,7 @@ an account), everything cart/order-related requires a token.
 `tests/perf/k6/*.js` - three k6 scripts: read-path browsing/search,
 the AI-assistant RAG pipeline (the most latency-sensitive endpoint, gets a
 looser p95 threshold to account for LLM generation time), and a write-path
-register/cart/checkout flow. `.github/workflows/ci.yml`'s `k6-smoke` job runs
+register/cart/checkout flow. `.github/workflows/shopsphere.yml`'s (at the repo root) `k6-smoke` job runs
 a short version of the first one on every push as a regression tripwire.
 
 ## Cloud deployment

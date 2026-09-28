@@ -1,9 +1,16 @@
-name: CI
+name: ShopSphere CI
 
 on:
   push:
     branches: [main]
+    paths: ["shopsphere/**", ".github/workflows/shopsphere.yml"]
   pull_request:
+    paths: ["shopsphere/**", ".github/workflows/shopsphere.yml"]
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: shopsphere
 
 env:
   NODE_VERSION: "20"
@@ -18,6 +25,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: shopsphere/package-lock.json
       - run: npm ci
       - run: npm run prisma:generate -w apps/api
       - run: npm run typecheck
@@ -31,6 +39,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: shopsphere/package-lock.json
       - run: npm ci
       - run: npm run prisma:generate -w apps/api
       - run: npm run test:unit
@@ -45,19 +54,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: shopsphere/package-lock.json
       - run: npm ci
       - run: npm run prisma:generate -w apps/api
       - run: npx playwright install --with-deps chromium
-        working-directory: tests
+        working-directory: shopsphere/tests
       - run: npm run test:e2e
-        working-directory: tests
+        working-directory: shopsphere/tests
         env:
           CI: true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
-          path: tests/playwright-report/
+          path: shopsphere/tests/playwright-report/
           retention-days: 14
 
   docker-build:
@@ -80,17 +90,18 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: shopsphere/package-lock.json
       - run: npm ci
       - run: npm run prisma:generate -w apps/api
       - name: Seed a disposable test database
-        working-directory: apps/api
+        working-directory: shopsphere/apps/api
         run: |
           npx prisma migrate deploy
           npx tsx prisma/seed.ts
         env:
           DATABASE_URL: "file:./test.db"
       - name: Start API (mock LLM provider)
-        working-directory: apps/api
+        working-directory: shopsphere/apps/api
         run: nohup npx tsx src/server.ts > /tmp/api.log 2>&1 &
         env:
           DATABASE_URL: "file:./test.db"
@@ -100,7 +111,7 @@ jobs:
         run: npx wait-on http://localhost:4000/health --timeout 30000
       - uses: grafana/k6-action@v0.3.1
         with:
-          filename: tests/perf/k6/product-search.js
+          filename: shopsphere/tests/perf/k6/product-search.js
           flags: --vus 5 --duration 15s
       - if: always()
         run: cat /tmp/api.log
@@ -113,7 +124,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.0"
-      - working-directory: infra/terraform
+      - working-directory: shopsphere/infra/terraform
         run: |
           terraform fmt -check -recursive
           terraform init -backend=false

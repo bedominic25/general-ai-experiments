@@ -22,7 +22,6 @@ src/
   report/          aggregates results into JSON + self-contained HTML
 test-cases/        the actual prompts and pass/fail criteria being evaluated
 tests/             the Playwright test file that wires it all together
-.github/workflows/ CI: runs the suite on every push/PR, uploads the report as an artifact
 ```
 
 ### Why Playwright's request-context, not a browser
@@ -90,9 +89,9 @@ summary totals) — this is separate from Playwright's own HTML report and is th
 
 ## CI
 
-`.github/workflows/eval.yml` runs the full suite on every push to `main` and on every pull
-request, using an `ANTHROPIC_API_KEY` repository secret, and uploads both reports as a
-downloadable artifact. Because there's real API cost per run (see the cost tracking above —
+`.github/workflows/llm-eval-framework.yml` (at the repo root) runs the full suite on every push to
+`main` and every pull request that touches this project, using an `ANTHROPIC_API_KEY` repository
+secret, and uploads both reports as a downloadable artifact. Because there's real API cost per run (see the cost tracking above —
 this framework literally measures its own CI spend), this is deliberately not run on every
 commit to every branch, only `main` and PRs.
 

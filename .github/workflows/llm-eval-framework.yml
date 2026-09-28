@@ -3,8 +3,14 @@ name: LLM Evaluation Suite
 on:
   push:
     branches: [main]
+    paths: ["llm-eval-framework/**", ".github/workflows/llm-eval-framework.yml"]
   pull_request:
+    paths: ["llm-eval-framework/**", ".github/workflows/llm-eval-framework.yml"]
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: llm-eval-framework
 
 jobs:
   evaluate:
@@ -16,6 +22,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: llm-eval-framework/package-lock.json
 
       - run: npm ci
 
@@ -30,6 +37,6 @@ jobs:
         with:
           name: evaluation-reports
           path: |
-            playwright-report/
-            reports/
+            llm-eval-framework/playwright-report/
+            llm-eval-framework/reports/
           retention-days: 14
