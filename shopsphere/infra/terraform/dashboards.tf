@@ -63,7 +63,7 @@ resource "aws_cloudwatch_dashboard" "main" {
 resource "aws_cloudwatch_metric_alarm" "api_5xx" {
   alarm_name          = "${var.app_name}-${var.environment}-api-5xx"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods   = 3
+  evaluation_periods  = 3
   metric_name         = "HTTPCode_Target_5XX_Count"
   namespace           = "AWS/ApplicationELB"
   period              = 60

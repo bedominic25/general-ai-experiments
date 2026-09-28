@@ -152,8 +152,8 @@ resource "aws_ecs_service" "api" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.api.arn
-    container_name    = "api"
-    container_port    = var.api_container_port
+    container_name   = "api"
+    container_port   = var.api_container_port
   }
 
   depends_on = [aws_lb_listener.http]
