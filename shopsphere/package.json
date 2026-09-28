@@ -13,6 +13,7 @@
     "dev:web": "npm run dev -w apps/web",
     "build": "npm run build -w apps/api && npm run build -w apps/web",
     "typecheck": "npm run typecheck -w apps/api && npm run typecheck -w apps/web && npm run typecheck -w tests",
+    "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "npm run test:unit -w apps/api",
     "test:e2e": "npm run test -w tests",
     "test:e2e:mobile": "npm run test:mobile -w tests",
