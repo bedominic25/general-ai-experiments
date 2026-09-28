@@ -1,0 +1,24 @@
+{
+  "name": "shopsphere",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI-enabled shopping demo (RAG product assistant, REST+GraphQL, auth, perf, IaC, observability, Playwright/TS regression suite)",
+  "workspaces": [
+    "apps/api",
+    "apps/web",
+    "tests"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/api && npm run build -w apps/web",
+    "typecheck": "npm run typecheck -w apps/api && npm run typecheck -w apps/web && npm run typecheck -w tests",
+    "test:unit": "npm run test:unit -w apps/api",
+    "test:e2e": "npm run test -w tests",
+    "test:e2e:mobile": "npm run test:mobile -w tests",
+    "seed": "npm run seed -w apps/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@shopsphere/tests",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:web": "playwright test --project=desktop-chrome --project=mobile-web",
+    "test:mobile": "playwright test --project=mobile-web",
+    "test:api": "playwright test --project=api",
+    "test:graphql": "playwright test --project=graphql",
+    "test:retrieval": "playwright test --project=retrieval",
+    "test:llm": "playwright test --project=llm-regression",
+    "test:llm:live": "LIVE_LLM_TESTS=true playwright test --project=llm-live",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2"
+  }
+}

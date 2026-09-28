@@ -1,0 +1,91 @@
+// Local/CI default is SQLite (zero external dependencies).
+// Swap provider to "postgresql" + set DATABASE_URL to the pgvector-enabled
+// instance (see docker-compose.yml / infra/terraform) for the production
+// topology - src/ai/vectorStore.ts picks its implementation from DATABASE_URL
+// at runtime so no application code changes are needed either way.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("customer") // "customer" | "admin"
+  createdAt    DateTime @default(now())
+
+  cartItems CartItem[]
+  orders    Order[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  sku         String   @unique
+  name        String
+  description String
+  category    String
+  priceCents  Int
+  stock       Int
+  imageUrl    String
+  // JSON-encoded number[] embedding produced by the local vectorizer
+  // (see src/ai/vectorizer.ts) - used by the retrieval/RAG path.
+  embedding   String
+  createdAt   DateTime @default(now())
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  userId      String
+  status      String   @default("placed") // "placed" | "paid" | "cancelled"
+  totalCents  Int
+  createdAt   DateTime @default(now())
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+}
+
+model OrderItem {
+  id             String @id @default(cuid())
+  orderId        String
+  productId      String
+  quantity       Int
+  unitPriceCents Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+// AI-assistant conversation log: doubles as the regression/observability
+// trail referenced in tests/specs/llm and the observability dashboards.
+model ChatMessage {
+  id                String   @id @default(cuid())
+  sessionId         String
+  userId            String?
+  role              String // "user" | "assistant"
+  content           String
+  retrievedProducts String? // JSON-encoded string[] of product IDs used as RAG context
+  latencyMs         Int?
+  createdAt         DateTime @default(now())
+}
