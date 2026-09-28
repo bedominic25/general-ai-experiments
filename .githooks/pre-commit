@@ -1,0 +1,10 @@
+#!/bin/sh
+# Scans staged changes for secrets before allowing a commit.
+# Requires gitleaks: brew install gitleaks
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks not found (brew install gitleaks) — skipping secret scan" >&2
+  exit 0
+fi
+
+gitleaks protect --staged --redact -v

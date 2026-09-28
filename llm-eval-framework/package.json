@@ -1,0 +1,18 @@
+{
+  "name": "llm-eval-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TypeScript + Playwright framework for evaluating LLM API responses: structured-output validation, relevance scoring, latency/cost tracking, and prompt-injection / unsafe-output detection.",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.0.0",
+    "dotenv": "^18.0.4",
+    "typescript": "^5.6.0",
+    "zod": "^3.23.0"
+  }
+}

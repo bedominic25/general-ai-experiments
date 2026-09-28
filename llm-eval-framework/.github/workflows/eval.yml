@@ -1,0 +1,35 @@
+name: LLM Evaluation Suite
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # No `playwright install` step: this suite only uses Playwright's
+      # request-context (API testing) feature, which needs no browser binary.
+      - run: npm test
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: evaluation-reports
+          path: |
+            playwright-report/
+            reports/
+          retention-days: 14
